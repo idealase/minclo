@@ -7,3 +7,4 @@ export { CollapsibleSection, type CollapsibleSectionProps } from './CollapsibleS
 export { KPICard, type KPICardProps } from './KPICard';
 export { SelectInput, type SelectInputProps, type SelectOption } from './SelectInput';
 export { ToggleSwitch, type ToggleSwitchProps } from './ToggleSwitch';
+export { ThemeToggle } from './ThemeToggle';

@@ -1,0 +1,71 @@
+/* Theme Toggle Button Styles */
+
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.toggle:active {
+  transform: scale(0.95);
+}
+
+.iconWrapper {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sunIcon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+
+.moonIcon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+.sunIcon.active {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.moonIcon.active {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Dark mode adjustments */
+:global([data-theme="dark"]) .toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+:global([data-theme="dark"]) .toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

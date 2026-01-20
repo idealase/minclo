@@ -1,10 +1,11 @@
 /**
  * Mine Closure Costing - Slider Input Component
  *
- * Combined slider and numeric input with validation, units, and tooltips.
+ * Combined slider and numeric input with validation, units, tooltips,
+ * and visual progress indicators.
  */
 
-import { useCallback, useState, useId, type ChangeEvent } from 'react';
+import { useCallback, useState, useId, useMemo, type ChangeEvent } from 'react';
 import { clamp } from '../utils/formatting';
 import styles from './SliderInput.module.css';
 
@@ -18,6 +19,8 @@ export interface SliderInputProps {
   tooltip?: string;
   onChange: (value: number) => void;
   disabled?: boolean;
+  /** Optional: show color-coded indicator based on value position */
+  showIndicator?: boolean;
 }
 
 export function SliderInput({
@@ -30,6 +33,7 @@ export function SliderInput({
   tooltip,
   onChange,
   disabled = false,
+  showIndicator = true,
 }: SliderInputProps): React.ReactElement {
   const id = useId();
   // Use input text for editing, reset to value when not focused
@@ -40,6 +44,18 @@ export function SliderInput({
 
   // Display value depends on editing state
   const displayValue = isEditing ? editValue : value.toString();
+
+  // Calculate percentage for visual indicator
+  const percentage = useMemo(() => {
+    return ((value - min) / (max - min)) * 100;
+  }, [value, min, max]);
+
+  // Determine indicator color based on percentage
+  const indicatorColor = useMemo(() => {
+    if (percentage < 33) return 'low';
+    if (percentage < 66) return 'medium';
+    return 'high';
+  }, [percentage]);
 
   const handleSliderChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -115,20 +131,29 @@ export function SliderInput({
       </div>
 
       <div className={styles.controls}>
-        <input
-          type="range"
-          id={id}
-          className={styles.slider}
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          onChange={handleSliderChange}
-          disabled={disabled}
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuenow={value}
-        />
+        <div className={styles.sliderWrapper}>
+          <input
+            type="range"
+            id={id}
+            className={styles.slider}
+            min={min}
+            max={max}
+            step={step}
+            value={value}
+            onChange={handleSliderChange}
+            disabled={disabled}
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={value}
+            style={{ '--slider-progress': `${percentage}%` } as React.CSSProperties}
+          />
+          {showIndicator && (
+            <div 
+              className={`${styles.progressBar} ${styles[indicatorColor]}`}
+              style={{ width: `${percentage}%` }}
+            />
+          )}
+        </div>
         <input
           type="text"
           className={`${styles.input} ${error ? styles.inputError : ''}`}

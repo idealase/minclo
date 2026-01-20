@@ -74,6 +74,38 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Dark theme variables */
+[data-theme="dark"] {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-success: #22c55e;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-info: #22d3ee;
+  
+  /* Dark grays (inverted) */
+  --color-gray-50: #111827;
+  --color-gray-100: #1f2937;
+  --color-gray-200: #374151;
+  --color-gray-300: #4b5563;
+  --color-gray-400: #6b7280;
+  --color-gray-500: #9ca3af;
+  --color-gray-600: #d1d5db;
+  --color-gray-700: #e5e7eb;
+  --color-gray-800: #f3f4f6;
+  --color-gray-900: #f9fafb;
+  
+  /* Semantic colors for dark mode */
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-dark: #1e293b;
+  --color-border: #334155;
+  --color-border-dark: #475569;
+}
+
 html,
 body {
   margin: 0;
