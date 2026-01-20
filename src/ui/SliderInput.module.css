@@ -68,7 +68,9 @@
 .sliderWrapper {
   flex: 1;
   position: relative;
-  height: 6px;
+  height: 24px;
+  display: flex;
+  align-items: center;
 }
 
 .slider {
@@ -90,11 +92,13 @@
   background: #3b82f6;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .slider::-webkit-slider-thumb:hover {
   background: #2563eb;
+  transform: scale(1.1);
 }
 
 .slider::-moz-range-thumb {
@@ -104,17 +108,23 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #2563eb;
 }
 
 /* Progress bar indicator */
 .progressBar {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
   height: 6px;
   border-radius: 3px 0 0 3px;
   pointer-events: none;
   z-index: 1;
+  transform: translateY(-50%);
   transition: width 0.15s ease, background-color 0.3s ease;
 }
 
