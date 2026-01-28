@@ -32,11 +32,19 @@ export function KPICard({
 }: KPICardProps): React.ReactElement {
   const [displayValue, setDisplayValue] = useState(value);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [changeDirection, setChangeDirection] = useState<'increase' | 'decrease' | null>(null);
   const previousValue = useRef<number>(value);
   const animationFrame = useRef<number | undefined>(undefined);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    // Skip animation on first render or if value hasn't changed
+    // Skip animation on first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    // Skip if value hasn't changed
     if (previousValue.current === value) {
       return;
     }
@@ -45,7 +53,14 @@ export function KPICard({
     const endValue = value;
     const startTime = performance.now();
 
-    setIsAnimating(true);
+    // Determine change direction for visual feedback
+    const direction = endValue > startValue ? 'increase' : endValue < startValue ? 'decrease' : null;
+    
+    // Start animation and set direction in a batch
+    requestAnimationFrame(() => {
+      setChangeDirection(direction);
+      setIsAnimating(true);
+    });
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
@@ -72,9 +87,6 @@ export function KPICard({
       }
     };
   }, [value]);
-
-  // Determine change direction for visual feedback
-  const changeDirection = value > previousValue.current ? 'increase' : value < previousValue.current ? 'decrease' : null;
 
   return (
     <div className={`${styles.card} ${isAnimating ? styles.animating : ''}`}>
