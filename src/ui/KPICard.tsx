@@ -74,6 +74,7 @@ export function KPICard({
       } else {
         setDisplayValue(endValue);
         setIsAnimating(false);
+        setChangeDirection(null);
         previousValue.current = endValue;
       }
     };
