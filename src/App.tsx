@@ -3,7 +3,9 @@
  */
 
 import { AppProvider } from './state';
+import { ThemeProvider } from './state/ThemeContext';
 import { InputPanel, OutputPanel } from './components';
+import { ThemeToggle } from './ui/ThemeToggle';
 import styles from './App.module.css';
 
 function AppContent(): React.ReactElement {
@@ -31,6 +33,7 @@ function AppContent(): React.ReactElement {
           >
             GitHub
           </a>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -124,9 +127,11 @@ function AppContent(): React.ReactElement {
 
 function App(): React.ReactElement {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <ThemeProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </ThemeProvider>
   );
 }
 

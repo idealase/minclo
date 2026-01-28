@@ -1,7 +1,10 @@
 /**
- * Mine Closure Costing - KPI Card Component
+ * Mine Closure Costing - Animated KPI Card Component
+ *
+ * Enhanced KPI card with animated value transitions and visual feedback.
  */
 
+import { useEffect, useRef, useState } from 'react';
 import type { CurrencyConfig } from '../domain/types';
 import { formatCurrency } from '../utils/formatting';
 import styles from './KPICard.module.css';
@@ -15,6 +18,10 @@ export interface KPICardProps {
   compact?: boolean;
 }
 
+// Animation duration in ms
+const ANIMATION_DURATION = 600;
+const EASING = (t: number): number => 1 - Math.pow(1 - t, 3); // easeOutCubic
+
 export function KPICard({
   title,
   value,
@@ -23,11 +30,57 @@ export function KPICard({
   trend,
   compact = false,
 }: KPICardProps): React.ReactElement {
+  const [displayValue, setDisplayValue] = useState(value);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const previousValue = useRef<number>(value);
+  const animationFrame = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    // Skip animation on first render or if value hasn't changed
+    if (previousValue.current === value) {
+      return;
+    }
+
+    const startValue = previousValue.current;
+    const endValue = value;
+    const startTime = performance.now();
+
+    setIsAnimating(true);
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
+      const easedProgress = EASING(progress);
+
+      const currentValue = startValue + (endValue - startValue) * easedProgress;
+      setDisplayValue(currentValue);
+
+      if (progress < 1) {
+        animationFrame.current = requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(endValue);
+        setIsAnimating(false);
+        previousValue.current = endValue;
+      }
+    };
+
+    animationFrame.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+      }
+    };
+  }, [value]);
+
+  // Determine change direction for visual feedback
+  const changeDirection = value > previousValue.current ? 'increase' : value < previousValue.current ? 'decrease' : null;
+
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${isAnimating ? styles.animating : ''}`}>
       <div className={styles.title}>{title}</div>
-      <div className={styles.value}>
-        {formatCurrency(value, currency, { compact })}
+      <div className={`${styles.value} ${isAnimating && changeDirection ? styles[changeDirection] : ''}`}>
+        {formatCurrency(displayValue, currency, { compact })}
         {trend && (
           <span
             className={`${styles.trend} ${trend === 'up' ? styles.trendUp : trend === 'down' ? styles.trendDown : ''}`}
@@ -37,6 +90,9 @@ export function KPICard({
         )}
       </div>
       {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+      
+      {/* Animated pulse effect */}
+      {isAnimating && <div className={styles.pulse} />}
     </div>
   );
 }
