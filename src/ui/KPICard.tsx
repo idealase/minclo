@@ -41,6 +41,7 @@ export function KPICard({
     // Skip animation on first render
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      previousValue.current = value;
       return;
     }
 
@@ -56,11 +57,9 @@ export function KPICard({
     // Determine change direction for visual feedback
     const direction = endValue > startValue ? 'increase' : endValue < startValue ? 'decrease' : null;
     
-    // Start animation and set direction in a batch
-    requestAnimationFrame(() => {
-      setChangeDirection(direction);
-      setIsAnimating(true);
-    });
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setChangeDirection(direction);
+    setIsAnimating(true);
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
